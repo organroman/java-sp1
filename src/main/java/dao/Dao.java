@@ -20,7 +20,7 @@ public interface Dao<T extends AbstractEntity> {
     boolean updateEntity(T y);
 
 
-    List<T> loadDataBase() throws IOException, ClassNotFoundException;
+    void loadDataBase() throws IOException, ClassNotFoundException;
 
     void saveDataBase(List<T> object) throws IOException;
 }

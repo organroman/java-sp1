@@ -55,15 +55,14 @@ public class CollectionFlightDao implements Dao<Flight> {
     }
 
     @Override
-    public List<Flight> loadDataBase() throws IOException, ClassNotFoundException {
+    public void loadDataBase() throws IOException, ClassNotFoundException {
         if (!file.exists()) {
-            return new ArrayList<>();
+            flights = new ArrayList<>();
         }
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             List<Flight> loadedFlights = (List<Flight>) ois.readObject();
             this.flights.clear();
             this.flights.addAll(loadedFlights);
-            return loadedFlights;
         }
 
     }

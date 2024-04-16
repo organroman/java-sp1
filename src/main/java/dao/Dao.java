@@ -1,20 +1,26 @@
 package dao;
 
+import entity.AbstractEntity;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
-public interface Dao<T> {
+public interface Dao<T extends AbstractEntity> {
     void create(T y);
+
     List<T> getAll();
 
-    T getById(int id);
+    default Optional<T> getById(int id) {
+        return getAll().stream().filter(item -> item.getId() == id).findFirst();
+    }
 
-    boolean deleteEntity(int index);
+    boolean deleteEntity(int id);
 
     boolean updateEntity(T y);
 
 
-    List<T> loadDataBase();
+    List<T> loadDataBase() throws IOException, ClassNotFoundException;
 
     void saveDataBase(List<T> object) throws IOException;
 }

@@ -7,8 +7,9 @@ import java.util.Scanner;
 
 public class MainMenu {
     private static final Scanner scanner = new Scanner(System.in);
-    // Контролер 1
-    //Контролер 2
+    private static boolean exitForApp = true;
+    // ControllerObject
+    //ControllerObject2
 
     static String showOurMenu (){
         StringBuilder menuCommands = new StringBuilder();
@@ -37,15 +38,14 @@ public class MainMenu {
     private static void availableTicket(){}
     private static void cancelReservation(){}
     private static void myflights(){}
-    private static boolean Exit(){ return false;}
-    public static int getAndValidateNumber(String message) {
+    private static void Exit(){exitForApp = false; } //+saveFile
+    public static int getAndValidateNumber() throws IOException{
         int number;
         while (true) {
-            System.out.print(message);
             try {
                 number = scanner.nextInt();
                 if (number >= 1 && number <= 6){
-                    throw new  Exception.NumberOutOfScopeException();
+                    throw new Exception.NumberOutOfScopeException();
                 }
                 break;
             } catch (Exception.NumberOutOfScopeException e){
@@ -59,4 +59,19 @@ public class MainMenu {
         scanner.nextLine();
         return number;
     }
+    static void runApp()  {
+        boolean exit = true;
+        //loadFile
+        System.out.println(showOurMenu());
+        try {
+            do {
+                System.out.print("Enter the number of command from the list: ");
+                handleMenu(getAndValidateNumber());
+                System.out.println(showOurMenu());
+            }while (exitForApp);
+        }
+        catch (IOException e){
+            System.out.println("It's not a valid number. Please enter an integer.");
+        }
+   }
 }

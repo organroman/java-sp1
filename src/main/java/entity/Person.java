@@ -1,6 +1,6 @@
 package entity;
 
-public class Person {
+public class Person extends AbstractEntity{
     private final String name;
     private final String surname;
 

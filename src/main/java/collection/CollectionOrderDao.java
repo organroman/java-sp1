@@ -24,10 +24,6 @@ public class CollectionOrderDao implements Dao<Order> {
     }
 
 
-    @Override
-    public Optional<Order> getById(int index) {
-        return Optional.ofNullable(orders.get(index));
-    }
 
     @Override
     public boolean deleteEntity(int id) {

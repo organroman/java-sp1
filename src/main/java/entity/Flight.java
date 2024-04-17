@@ -1,5 +1,6 @@
 package entity;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,22 +8,25 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-public class Flight extends AbstractEntity {
+public class Flight extends AbstractEntity implements Serializable {
     String departure;
     String destination;
     int availableSeats;
     long dateTimeOfDeparture;
 
-    private final transient DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm");
+    private transient DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm");
 
     public Flight(String departure, String destination, int availableSeats, long dateTimeOfDeparture) {
-        this.departure = departure;
+        super();
+        this.departure = "Kyiv";
         this.destination = destination;
         this.availableSeats = availableSeats;
         this.dateTimeOfDeparture = dateTimeOfDeparture;
     }
 
     public Flight() {
+        super();
+        this.departure = "Kyiv";
 
     }
 
@@ -55,8 +59,11 @@ public class Flight extends AbstractEntity {
     }
 
     public void setDateTimeOfDeparture(String dateTimeOfDeparture) {
-        LocalDateTime localDate = LocalDate.parse(dateTimeOfDeparture, formatter).atStartOfDay();
-        this.dateTimeOfDeparture = localDate.toEpochSecond(ZoneOffset.UTC) * 1000;
+        if (formatter == null) {
+            formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm");
+        }
+        LocalDateTime localDateTime = LocalDateTime.parse(dateTimeOfDeparture, formatter);
+        this.dateTimeOfDeparture = localDateTime.toEpochSecond(ZoneOffset.UTC) * 1000;
     }
 
     @Override
@@ -64,7 +71,7 @@ public class Flight extends AbstractEntity {
         StringBuilder outcome = new StringBuilder("Flight {");
 
         LocalDateTime localDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.dateTimeOfDeparture), ZoneOffset.UTC);
-        String formattedDate = localDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        String formattedDate = localDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm"));
 
         outcome.append("id= ")
                 .append(getId())
@@ -74,7 +81,9 @@ public class Flight extends AbstractEntity {
                 .append(destination)
                 .append(", departure time: ")
                 .append(formattedDate)
-                .append('}');
+                .append(", available seats: ")
+                .append(availableSeats)
+                .append("}");
 
         return outcome.toString();
     }

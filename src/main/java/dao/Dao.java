@@ -1,6 +1,7 @@
 package dao;
 
 import entity.AbstractEntity;
+import entity.Flight;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,8 +20,7 @@ public interface Dao<T extends AbstractEntity> {
 
     boolean updateEntity(T y);
 
-
     void loadDataBase() throws IOException, ClassNotFoundException;
 
-    void saveDataBase(List<T> object) throws IOException;
+    void saveDataBase() throws IOException;
 }

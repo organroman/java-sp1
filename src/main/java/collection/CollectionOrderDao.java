@@ -56,10 +56,12 @@ public class CollectionOrderDao implements Dao<Order> {
     }
 
     @Override
-    public void saveDataBase(List<Order> object) throws IOException {
+    public void saveDataBase(
+//            List<Order> object
+    ) throws IOException {
         try {
             final ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
-            oos.writeObject(object);
+            oos.writeObject(this.orders);
             oos.close();
         } catch (
                 FileNotFoundException ex) {

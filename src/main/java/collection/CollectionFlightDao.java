@@ -34,15 +34,16 @@ public class CollectionFlightDao implements Dao<Flight> {
         return flights;
     }
 
-
     @Override
     public boolean deleteEntity(int id) {
-        Optional<Flight> flight = getById(id);
-        if (!flights.contains(flight)) {
-            return false;
+        Optional<Flight> flightOptional = getById(id);
+        if (flightOptional.isPresent()) {
+            Flight flight = flightOptional.get();
+            this.flights.remove(flight);
+            return true;
         }
-        this.flights.remove(flight);
-        return true;
+
+        return false;
     }
 
     @Override
@@ -64,11 +65,10 @@ public class CollectionFlightDao implements Dao<Flight> {
             this.flights.clear();
             this.flights.addAll(loadedFlights);
         }
-
     }
 
     @Override
-    public void saveDataBase(List<Flight> object) throws IOException {
+    public void saveDataBase() throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(this.flights);
 

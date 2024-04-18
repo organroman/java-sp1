@@ -86,11 +86,6 @@ public class FlightService {
         } else return "Flight not found";
     }
 
-    private boolean isSameDate(long departureTime, LocalDate searchDate) {
-        LocalDateTime departureDateTime = LocalDateTime.ofEpochSecond(departureTime / 1000, 0, ZoneOffset.UTC);
-        return departureDateTime.toLocalDate().isEqual(searchDate);
-    }
-
     public List<Flight> findFlights(String destination, String date, int passengers) {
         List<Flight> allFlights = getAllFlights();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -98,7 +93,7 @@ public class FlightService {
 
         return allFlights.stream()
                 .filter(flight -> Objects.equals(flight.getDestination(), destination))
-                .filter(flight -> isSameDate(flight.getDateTimeOfDeparture(), searchDate))
+                .filter(flight -> Helpers.isSameDay(flight.getDateTimeOfDeparture(), searchDate))
                 .filter(flight -> flight.getAvailableSeats() >= passengers)
                 .collect(Collectors.toList());
     }
@@ -138,7 +133,6 @@ public class FlightService {
 
     public List<Flight> getTodayFlights() {
         LocalDate today = LocalDate.now();
-        System.out.printf("Today %s", today);
         List<Flight> flights = flightDao.getAll();
         return flights.stream()
                 .filter(flight -> Helpers.isSameDay(flight.getDateTimeOfDeparture(), today))

@@ -7,6 +7,7 @@ import entity.Flight;
 import entity.MainMenu;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 public class MenuTest {
 
     @Test
-    public void prettyFormatTest (){
+    public void prettyFormatTest  (){
         LocalDateTime dateTime1 = LocalDateTime.of(2004, 4, 18, 21, 0);
         long timestamp1 = dateTime1.toInstant(ZoneOffset.UTC).toEpochMilli();
         LocalDateTime dateTime2 = LocalDateTime.of(2004, 4, 18, 22, 0);
@@ -29,10 +30,16 @@ public class MenuTest {
         Flight flight3 = new Flight("Kyiv", "Astana", 21, timestamp3);
 
         MainMenu mainMenu = new MainMenu();
-        mainMenu.showFlights();
-        System.out.println(mainMenu.toFormattedString(flight1));
-        System.out.println(mainMenu.toFormattedString(flight2));
-        System.out.println(mainMenu.toFormattedString(flight3));
+
+        try {
+            mainMenu.showFlights();
+            System.out.println(mainMenu.toFormattedString(flight1));
+            System.out.println(mainMenu.toFormattedString(flight2));
+            System.out.println(mainMenu.toFormattedString(flight3));
+        }
+        catch (IOException e){
+            System.out.println("No flight");
+        }
 
 
     }

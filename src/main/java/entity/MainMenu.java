@@ -44,12 +44,12 @@ public class MainMenu {
         }
     }
 
-    public void showFlights() {
+    public void showFlights() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         System.out.println("| Flight ID | Departure  | Destination          | Available seats | Time  |");
         flightController.getTodayFLights().forEach(x -> {
-            System.out.println(toFormattedString(x));
-        });
+                System.out.println(toFormattedString(x));
+            });
         System.out.println("\n");
         System.out.println(showOurMenu());
     }
@@ -77,7 +77,7 @@ public class MainMenu {
         exitForApp = false;
     }
 
-    public static int getAndValidateNumberForMenu() throws IOException {
+    public static int getAndValidateNumberForMenu()  {
         int number;
         while (true) {
             try {
@@ -116,13 +116,9 @@ public class MainMenu {
 
         return number;
     }
-
-    public String toFormattedString(Flight flight) {
-        LocalTime departureTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(flight.getDateTimeOfDeparture()), ZoneOffset.UTC).toLocalTime();
-        String formattedTime = departureTime.format(DateTimeFormatter.ofPattern("HH:mm"));
-
+    public String toFormattedString(Flight flight)  {
         return String.format("| %-9s | %-10s | %-20s | %-15d | %-5s |",
-                flight.getId(), flight.getDeparture(), flight.getDestination(), flight.availableSeats, formattedTime);
+                flight.getId(), flight.getDeparture(), flight.getDestination(), flight.availableSeats, flightController.getTimeOfDeparture(flight.getId()));
     }
 
     void runApp() {

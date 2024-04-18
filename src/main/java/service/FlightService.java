@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -65,7 +66,7 @@ public class FlightService {
                     .toLocalDateTime();
 
 
-            return departureDateTime.format(DateTimeFormatter.ofPattern(" HH:mm"));
+            return departureDateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
         } else return "Flight not found";
 
     }
@@ -83,6 +84,18 @@ public class FlightService {
 
             return departureDateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         } else return "Flight not found";
+    }
+
+    public List<Flight> findFlights(String destination, String date, int passengers) {
+        List<Flight> allFlights = getAllFlights();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate searchDate = LocalDate.parse(date, formatter);
+
+        return allFlights.stream()
+                .filter(flight -> Objects.equals(flight.getDestination(), destination))
+                .filter(flight -> Helpers.isSameDay(flight.getDateTimeOfDeparture(), searchDate))
+                .filter(flight -> flight.getAvailableSeats() >= passengers)
+                .collect(Collectors.toList());
     }
 
     public String getDestination(int id) {
@@ -134,6 +147,15 @@ public class FlightService {
             flight.setAvailableSeats(availableSeats - seatsNumber);
             return true;
         } else return false;
+    }
+
+    public boolean increaseAvailableSeats(int id, int seatsNumber) throws IOException {
+        Flight flight = getFlight(id);
+        int availableSeats = getAvailableSeats(id);
+
+        flight.setAvailableSeats(availableSeats + seatsNumber);
+        return true;
+
     }
 
     public void saveData() throws IOException {

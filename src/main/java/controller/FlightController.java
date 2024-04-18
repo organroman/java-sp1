@@ -56,6 +56,10 @@ public class FlightController {
         return flightService.getDeparture(id);
     }
 
+    public List<Flight> findFlights(String destination, String date, int passengers) {
+        return flightService.findFlights(destination, date, passengers);
+    }
+
     public int countFlights() {
         return flightService.countFlights();
     }
@@ -66,6 +70,10 @@ public class FlightController {
 
     public boolean decreaseAvailableSeats(int id, int seats) throws IOException {
         return flightService.decreaseAvailableSeats(id, seats);
+    }
+
+    public boolean increaseAvailableSeats(int id, int seats) throws IOException {
+        return flightService.increaseAvailableSeats(id, seats);
     }
 
     public void saveData() throws IOException {

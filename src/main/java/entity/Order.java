@@ -3,7 +3,7 @@ package entity;
 import java.util.List;
 import java.util.Random;
 
-public class Order extends AbstractEntity {
+public class Order {
     private int orderId;
     private Flight flight;
 

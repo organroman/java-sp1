@@ -9,6 +9,7 @@ public class Application {
         FlightController flightController = new FlightController();
 
         flightController.loadData();
+        flightController.displayAllFlights();
 
     }
 }

@@ -8,16 +8,19 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-public class Flight extends AbstractEntity implements Serializable {
+public class Flight implements Serializable {
     String departure;
     String destination;
     int availableSeats;
     long dateTimeOfDeparture;
+    int id;
+
+    private static int nextId = 1;
 
     private transient DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm");
 
-    public Flight(String departure, String destination, int availableSeats, long dateTimeOfDeparture) {
-        super();
+    public Flight(String destination, int availableSeats, long dateTimeOfDeparture) {
+        this.id = nextId++;
         this.departure = "Kyiv";
         this.destination = destination;
         this.availableSeats = availableSeats;
@@ -25,9 +28,17 @@ public class Flight extends AbstractEntity implements Serializable {
     }
 
     public Flight() {
-        super();
+        this.id = nextId++;
         this.departure = "Kyiv";
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDeparture() {

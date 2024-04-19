@@ -1,20 +1,13 @@
 package dao;
 
-import entity.AbstractEntity;
-import entity.Flight;
-
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
-public interface Dao<T extends AbstractEntity> {
+public interface Dao<T> {
     void create(T y);
 
     List<T> getAll();
-
-    default Optional<T> getById(int id) {
-        return getAll().stream().filter(item -> item.getId() == id).findFirst();
-    }
+    T getById(int id);
 
     boolean deleteEntity(int id);
 

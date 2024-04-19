@@ -31,20 +31,27 @@ public class FlightService {
         flights.forEach(System.out::println);
     }
 
-    public Flight createNewFlight() throws IOException {
-        Flight newFlight = new Flight();
+    public Flight createNewFlight(String destination, int seats, String dateTime) throws IOException {
         List<Flight> flights = getAllFlights();
-        flights.add(newFlight);
-        flightDao.saveDataBase();
+        int nextId = flights.stream()
+                .mapToInt(Flight::getId)
+                .max()
+                .orElse(0) + 1;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm");
+        LocalDateTime localDateTime = LocalDateTime.parse(dateTime, formatter);
+        long dateTimeMils = localDateTime.toEpochSecond(ZoneOffset.UTC) * 1000;
+        Flight newFlight = new Flight(destination, seats, dateTimeMils);
+        newFlight.setId(nextId);
+
+        flightDao.create(newFlight);
+//        flightDao.saveDataBase();
+
         return newFlight;
     }
 
     public Flight getFlight(int id) {
-        Optional<Flight> fl = flightDao.getById(id);
-        if (fl.isPresent()) {
-            return fl.get();
-        }
-        return null;
+        return flightDao.getById(id);
     }
 
     public void updateFlight(Flight flight) {
@@ -56,27 +63,21 @@ public class FlightService {
     }
 
     public String getTimeOfDeparture(int id) {
-        Optional<Flight> flightOptional = flightDao.getById(id);
-        if (flightOptional.isPresent()) {
-            Flight flight = flightOptional.get();
+        Flight flight = flightDao.getById(id);
+        if (flight != null) {
             long dateTimeOfDepartureMillis = flight.getDateTimeOfDeparture();
-
             LocalDateTime departureDateTime = Instant.ofEpochMilli(dateTimeOfDepartureMillis)
                     .atZone(ZoneOffset.UTC)
                     .toLocalDateTime();
-
-
             return departureDateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
         } else return "Flight not found";
 
     }
 
     public String getDateOfDeparture(int id) {
-        Optional<Flight> flightOptional = flightDao.getById(id);
-        if (flightOptional.isPresent()) {
-            Flight flight = flightOptional.get();
+        Flight flight = flightDao.getById(id);
+        if (flight != null) {
             long dateTimeOfDepartureMillis = flight.getDateTimeOfDeparture();
-
             LocalDateTime departureDateTime = Instant.ofEpochMilli(dateTimeOfDepartureMillis)
                     .atZone(ZoneOffset.UTC)
                     .toLocalDateTime();
@@ -99,28 +100,24 @@ public class FlightService {
     }
 
     public String getDestination(int id) {
-        Optional<Flight> flightOptional = flightDao.getById(id);
-        if (flightOptional.isPresent()) {
-            Flight flight = flightOptional.get();
+        Flight flight = flightDao.getById(id);
+        if (flight != null) {
             return flight.getDestination();
         } else return "Flight not found";
     }
 
     public int getAvailableSeats(int id) throws IOException {
-        Optional<Flight> flightOptional = flightDao.getById(id);
+        Flight flight = flightDao.getById(id);
 
-        if (flightOptional.isPresent()) {
-            Flight flight = flightOptional.get();
+        if (flight != null) {
             return flight.getAvailableSeats();
         } else throw new IOException("Flight not found");
 
     }
 
     public String getDeparture(int id) throws IOException {
-        Optional<Flight> flightOptional = flightDao.getById(id);
-
-        if (flightOptional.isPresent()) {
-            Flight flight = flightOptional.get();
+        Flight flight = flightDao.getById(id);
+        if (flight != null) {
             return flight.getDeparture();
         } else throw new IOException("Flight not found");
     }

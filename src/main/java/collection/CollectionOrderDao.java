@@ -10,8 +10,13 @@ import java.util.Optional;
 
 public class CollectionOrderDao implements Dao<Order> {
 
-    private List<Order> orders = new ArrayList<>();
-    private final File file = new File("Orders.bin");
+    private List<Order> orders;
+    private final File file;
+
+    public CollectionOrderDao(List<Order> orders, String fileName) {
+        this.orders = orders;
+        this.file = new File(fileName);
+    }
 
     @Override
     public void create(Order y) {
@@ -24,15 +29,15 @@ public class CollectionOrderDao implements Dao<Order> {
     }
 
 
-
     @Override
-    public boolean deleteEntity(int id) {
-        Optional<Order> order = getById(id);
-        if (!orders.contains(order)) {
-            return false;
+    public boolean deleteEntity(int orderId) {
+        Optional<Order> toDelete = orders.stream().filter(order -> orderId == order.getOrderId()).findFirst();
+        if (toDelete.isPresent()) {
+            orders.remove(toDelete.get());
+            System.out.println("Order with id= "+ orderId+" was delete");
+            return true;
         }
-        this.orders.remove(order);
-        return true;
+        return false;
     }
 
     @Override
@@ -46,22 +51,25 @@ public class CollectionOrderDao implements Dao<Order> {
 
     @Override
     public void loadDataBase() throws IOException, ClassNotFoundException {
+        if (!file.exists())
+            orders = new ArrayList<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             Object object = ois.readObject();
-            orders = (ArrayList<Order>) object;
+            List<Order> newOrders = (ArrayList<Order>) object;
+            orders.clear();
+            orders.addAll(newOrders);
             ois.close();
             if (!orders.isEmpty())
                 System.out.println("Add DataBase From file Successful");
         }
+
     }
 
     @Override
-    public void saveDataBase(
-//            List<Order> object
-    ) throws IOException {
+    public void saveDataBase() throws IOException {
         try {
             final ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
-            oos.writeObject(this.orders);
+            oos.writeObject(orders);
             oos.close();
         } catch (
                 FileNotFoundException ex) {

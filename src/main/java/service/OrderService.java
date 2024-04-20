@@ -42,6 +42,10 @@ public class OrderService {
     public void loadData() throws IOException, ClassNotFoundException {
         orderDao.loadDataBase();
     }
+
+    public Order getById(int id) {
+        return orderDao.getById(id);
+    }
 }
 
 

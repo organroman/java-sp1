@@ -14,6 +14,6 @@ public class Application {
 
         OrderController orderController = new OrderController();
         orderController.loadData();
-
+        orderController.printBase();
     }
 }

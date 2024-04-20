@@ -28,13 +28,20 @@ public class CollectionOrderDao implements Dao<Order> {
         return orders;
     }
 
+    @Override
+    public Order getById(int id) {
+        Optional<Order> order = orders.stream().filter(item -> item.getOrderId() == id).findFirst();
+        return order.orElse(null);
+
+    }
+
 
     @Override
     public boolean deleteEntity(int orderId) {
         Optional<Order> toDelete = orders.stream().filter(order -> orderId == order.getOrderId()).findFirst();
         if (toDelete.isPresent()) {
             orders.remove(toDelete.get());
-            System.out.println("Order with id= "+ orderId+" was delete");
+            System.out.println("Order with id= " + orderId + " was delete");
             return true;
         }
         return false;

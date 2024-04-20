@@ -1,6 +1,10 @@
 package entity;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
 
@@ -28,11 +32,19 @@ public class Order implements Serializable {
 
     @Override
     public String toString() {
-        return "\nOrderId= " + orderId +
-                ", Buyer: " + buyer +
-                ", amount= " + amount +
-                ", passengers=" + passengers +
-                ", \nflight=" + flight;
+        LocalDateTime localDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(flight.dateTimeOfDeparture), ZoneOffset.UTC);
+        String formattedDate = localDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm"));
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nOrderId= ").append(orderId).append(" | ")
+                .append("Buyer: ").append(buyer).append(" | ")
+                .append("amount seats= ").append(amount).append(" | ")
+                .append("passengers= ").append(passengers)
+                .append("\nTicket on board: {")
+                .append("flight id= ").append(flight.id).append(" | ")
+                .append("departure= ").append(flight.departure).append(" | ")
+                .append("destination= ").append(flight.destination).append(" | ")
+                .append("departure time: ").append(formattedDate).append("}");
+        return String.valueOf(sb);
     }
 
     public int getOrderId() {

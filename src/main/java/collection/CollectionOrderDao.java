@@ -1,6 +1,7 @@
 package collection;
 
 import dao.Dao;
+import entity.Flight;
 import entity.Order;
 
 import java.io.*;
@@ -21,6 +22,13 @@ public class CollectionOrderDao implements Dao<Order> {
     @Override
     public void create(Order y) {
         orders.add(y);
+    }
+//    todo:
+    @Override
+    public Order getById(int id) {
+        List<Order> orders = getAll();
+        Optional<Order> optionalOrder = orders.stream().filter(item -> item.getOrderId() == id).findFirst();
+        return optionalOrder.orElse(null);
     }
 
     @Override

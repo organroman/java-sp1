@@ -5,14 +5,14 @@ import controller.FlightController;
 import dao.Dao;
 import entity.Flight;
 import entity.MainMenu;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
+//import static org.junit.Assert.assertEquals;
 
 public class MenuTest {
 
@@ -25,9 +25,9 @@ public class MenuTest {
         LocalDateTime dateTime3 = LocalDateTime.of(2004, 4, 18, 23, 0);
         long timestamp3 = dateTime3.toInstant(ZoneOffset.UTC).toEpochMilli();
 
-        Flight flight1 = new Flight("Kyiv", "Lublin", 16, timestamp1);
-        Flight flight2 = new Flight("Kyiv", "Riga", 25, timestamp2);
-        Flight flight3 = new Flight("Kyiv", "Astana", 21, timestamp3);
+        Flight flight1 = new Flight( "Lublin", 16, timestamp1);
+        Flight flight2 = new Flight( "Riga", 25, timestamp2);
+        Flight flight3 = new Flight( "Astana", 21, timestamp3);
 
         MainMenu mainMenu = new MainMenu();
 

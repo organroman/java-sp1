@@ -1,10 +1,7 @@
 
 import controller.FlightController;
-import controller.OrderController;
-import entity.Flight;
 
 import java.io.IOException;
-import java.util.List;
 
 public class Application {
 
@@ -12,9 +9,6 @@ public class Application {
 
         FlightController flightController = new FlightController();
         flightController.loadData();
-
-        OrderController orderController = new OrderController();
-        orderController.loadData();
 
     }
 }

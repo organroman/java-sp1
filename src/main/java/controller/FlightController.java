@@ -2,6 +2,7 @@ package controller;
 
 import collection.CollectionFlightDao;
 import entity.Flight;
+import exception.FlightServiceException;
 import service.FlightService;
 
 import java.io.IOException;
@@ -16,23 +17,23 @@ public class FlightController {
         return flightService.getAllFlights();
     }
 
-    public void  displayAllFlights() {
+    public void displayAllFlights() {
         flightService.displayAllFlights();
     }
 
-    public Flight createFlight(String destination, int seats, String dateTime) throws IOException {
+    public Flight createFlight(String destination, int seats, String dateTime) {
         return flightService.createNewFlight(destination, seats, dateTime);
     }
 
-    public Flight getFlight(int id) {
+    public Flight getFlight(int id) throws IOException {
         return flightService.getFlight(id);
     }
 
-    public void  updateFlight(Flight flight) {
+    public void updateFlight(Flight flight) {
         flightService.updateFlight(flight);
     }
 
-    public void deleteFlight(int id)  {
+    public void deleteFlight(int id) {
         flightService.deleteFlight(id);
     }
 
@@ -48,11 +49,11 @@ public class FlightController {
         return flightService.getDestination(id);
     }
 
-    public int getAvailableSeats(int id) throws IOException {
+    public int getAvailableSeats(int id) {
         return flightService.getAvailableSeats(id);
     }
 
-    public String getDeparture(int id)throws IOException{
+    public String getDeparture(int id) {
         return flightService.getDeparture(id);
     }
 
@@ -68,11 +69,11 @@ public class FlightController {
         return flightService.getTodayFlights();
     }
 
-    public boolean decreaseAvailableSeats(int id, int seats) throws IOException {
+    public boolean decreaseAvailableSeats(int id, int seats) {
         return flightService.decreaseAvailableSeats(id, seats);
     }
 
-    public boolean increaseAvailableSeats(int id, int seats) throws IOException {
+    public boolean increaseAvailableSeats(int id, int seats) {
         return flightService.increaseAvailableSeats(id, seats);
     }
 
@@ -82,6 +83,7 @@ public class FlightController {
 
     public void loadData() throws IOException, ClassNotFoundException {
         flightService.loadData();
+
     }
 
 }

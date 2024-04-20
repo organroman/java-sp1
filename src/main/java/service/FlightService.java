@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public class FlightService {
         flights.forEach(System.out::println);
     }
 
-    public Flight createNewFlight(String destination, int seats, String dateTime) throws IOException {
+    public Flight createNewFlight(String destination, int seats, String dateTime) {
         List<Flight> flights = getAllFlights();
         int nextId = flights.stream()
                 .mapToInt(Flight::getId)
@@ -45,8 +46,6 @@ public class FlightService {
         newFlight.setId(nextId);
 
         flightDao.create(newFlight);
-//        flightDao.saveDataBase();
-
         return newFlight;
     }
 
@@ -129,10 +128,19 @@ public class FlightService {
     }
 
     public List<Flight> getTodayFlights() {
-        LocalDate today = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime next24Hours = now.plusHours(24);
+
         List<Flight> flights = flightDao.getAll();
+
         return flights.stream()
-                .filter(flight -> Helpers.isSameDay(flight.getDateTimeOfDeparture(), today))
+                .filter(flight -> {
+                    LocalDateTime departureDateTime = LocalDateTime.ofInstant(
+                            Instant.ofEpochMilli(flight.getDateTimeOfDeparture()),
+                            ZoneOffset.UTC
+                    );
+                    return departureDateTime.isAfter(now) && departureDateTime.isBefore(next24Hours);
+                })
                 .collect(Collectors.toList());
     }
 

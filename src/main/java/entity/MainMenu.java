@@ -20,7 +20,7 @@ public class MainMenu {
     private static boolean exitForApp = true;
 
     FlightController flightController = new FlightController();
-    Dao<Order> orderDao = new CollectionOrderDao(); // Change to OrderController
+//    Dao<Order> orderDao = new CollectionOrderDao(); //todo: Change to OrderController
 
     static String showOurMenu() {
         StringBuilder menuCommands = new StringBuilder();
@@ -73,7 +73,7 @@ public class MainMenu {
 
     private void Exit() throws IOException {
         flightController.saveData();
-        orderDao.saveDataBase(); // Change to OrderController
+//        orderDao.saveDataBase(); // todo:Change to OrderController
         exitForApp = false;
     }
 
@@ -125,7 +125,7 @@ public class MainMenu {
         try {
             boolean exit = true;
             flightController.loadData();
-            orderDao.loadDataBase(); // Change to OrderController
+//            orderDao.loadDataBase(); //todo: Change to OrderController
             System.out.println(showOurMenu());
             do {
                 System.out.print("Enter the number of command from the list: ");

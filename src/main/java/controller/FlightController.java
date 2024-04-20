@@ -20,8 +20,8 @@ public class FlightController {
         flightService.displayAllFlights();
     }
 
-    public Flight createFlight() throws IOException {
-        return flightService.createNewFlight();
+    public Flight createFlight(String destination, int seats, String dateTime) throws IOException {
+        return flightService.createNewFlight(destination, seats, dateTime);
     }
 
     public Flight getFlight(int id) {

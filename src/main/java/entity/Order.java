@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
-public class Order extends AbstractEntity implements Serializable {
+public class Order implements Serializable {
 
     private Flight flight;
 

@@ -1,9 +1,8 @@
 package entity;
-
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Person extends AbstractEntity implements Serializable {
+public class Person implements Serializable {
     private final String name;
     private final String surname;
 

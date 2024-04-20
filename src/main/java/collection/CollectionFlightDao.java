@@ -12,7 +12,6 @@ public class CollectionFlightDao implements Dao<Flight> {
     private List<Flight> flights;
     private File file;
 
-    private int id = 0;
 
     public CollectionFlightDao(List<Flight> flights, String filename) {
         this.flights = flights;
@@ -21,10 +20,11 @@ public class CollectionFlightDao implements Dao<Flight> {
 
     @Override
     public void create(Flight flight) {
+
         if (this.flights.contains(flight)) {
             updateEntity(flight);
         } else {
-            flight.setId(++id);
+
             this.flights.add(flight);
         }
     }
@@ -35,15 +35,20 @@ public class CollectionFlightDao implements Dao<Flight> {
     }
 
     @Override
-    public boolean deleteEntity(int id) {
-        Optional<Flight> flightOptional = getById(id);
-        if (flightOptional.isPresent()) {
-            Flight flight = flightOptional.get();
-            this.flights.remove(flight);
-            return true;
-        }
+    public Flight getById(int id) {
+        List<Flight> flights = getAll();
+        Optional<Flight> optionalFlight = flights.stream().filter(item -> item.getId() == id).findFirst();
+        return optionalFlight.orElse(null);
+    }
 
-        return false;
+    @Override
+    public boolean deleteEntity(int id) {
+        Flight flight = getById(id);
+
+        if (flight == null) return false;
+        this.flights.remove(flight);
+        return true;
+
     }
 
     @Override

@@ -39,4 +39,8 @@ public class OrderController {
     public void loadData() throws IOException, ClassNotFoundException {
         orderService.loadData();
     }
+
+    public Order getById(int id) {
+        return orderService.getById(id);
+    }
 }

@@ -10,5 +10,12 @@ public class Exception {
             super("Your number does not match the menu choice");
         }
     }
-
+    public static class NonExistentFlightException extends RuntimeException {
+        public NonExistentFlightException (String message){
+            super(message);
+        }
+        public NonExistentFlightException(){
+            super("There is no flight with that number");
+        }
+    }
 }

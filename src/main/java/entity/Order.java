@@ -1,34 +1,38 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
-public class Order {
-    private int orderId;
+public class Order implements Serializable {
+
     private Flight flight;
 
-    private Person person;
+    private Person buyer;
 
     private int amount;
 
     List<Person> passengers;
 
-    public Order(Flight flight, Person person, int amount, List<Person> passengers) {
+    int orderId;
+
+    public Order(Flight flight, Person buyer, int amount, List<Person> passengers) {
         Random random = new Random();
         this.orderId = random.nextInt(9999);
+
         this.flight = flight;
-        this.person = person;
+        this.buyer = buyer;
         this.amount = amount;
         this.passengers = passengers;
     }
 
     @Override
     public String toString() {
-        return "OrderId=" + orderId +
-                ", flight=" + flight +
-                ", person=" + person +
-                ", amount=" + amount +
-                ", passengers=" + passengers;
+        return "\nOrderId= " + orderId +
+                ", Buyer: " + buyer +
+                ", amount= " + amount +
+                ", passengers=" + passengers +
+                ", \nflight=" + flight;
     }
 
     public int getOrderId() {
@@ -47,12 +51,12 @@ public class Order {
         this.flight = flight;
     }
 
-    public Person getPerson() {
-        return person;
+    public Person getBuyer() {
+        return buyer;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
+    public void setBuyer(Person buyer) {
+        this.buyer = buyer;
     }
 
     public int getAmount() {

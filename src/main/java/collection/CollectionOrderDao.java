@@ -23,6 +23,13 @@ public class CollectionOrderDao implements Dao<Order> {
     public void create(Order y) {
         orders.add(y);
     }
+//    todo:
+    @Override
+    public Order getById(int id) {
+        List<Order> orders = getAll();
+        Optional<Order> optionalOrder = orders.stream().filter(item -> item.getOrderId() == id).findFirst();
+        return optionalOrder.orElse(null);
+    }
 
     @Override
     public List<Order> getAll() {

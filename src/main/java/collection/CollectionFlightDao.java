@@ -2,6 +2,7 @@ package collection;
 
 import dao.Dao;
 import entity.Flight;
+import exception.CollectionDaoException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -12,7 +13,6 @@ public class CollectionFlightDao implements Dao<Flight> {
     private List<Flight> flights;
     private File file;
 
-    private int id = 0;
 
     public CollectionFlightDao(List<Flight> flights, String filename) {
         this.flights = flights;
@@ -21,57 +21,84 @@ public class CollectionFlightDao implements Dao<Flight> {
 
     @Override
     public void create(Flight flight) {
-        if (this.flights.contains(flight)) {
-            updateEntity(flight);
-        } else {
-            flight.setId(++id);
+        try {
             this.flights.add(flight);
+        } catch (Exception e) {
+            throw new CollectionDaoException(CollectionDaoException.ERROR_CREATING_NEW_FLIGHT);
         }
     }
 
     @Override
     public List<Flight> getAll() {
-        return flights;
+        try {
+            return flights;
+        } catch (Exception e) {
+            throw new CollectionDaoException(CollectionDaoException.ERROR_RETRIEVING_ALL_FLIGHTS);
+        }
+    }
+
+    @Override
+    public Flight getById(int id) {
+        try {
+            List<Flight> flights = getAll();
+            Optional<Flight> optionalFlight = flights.stream().filter(item -> item.getId() == id).findFirst();
+            return optionalFlight.orElse(null);
+        } catch (Exception e) {
+            throw new CollectionDaoException(CollectionDaoException.ERROR_GETTING_FLIGHT);
+        }
     }
 
     @Override
     public boolean deleteEntity(int id) {
-        Optional<Flight> flightOptional = getById(id);
-        if (flightOptional.isPresent()) {
-            Flight flight = flightOptional.get();
+        try {
+            Flight flight = getById(id);
+            if (flight == null) {
+                return false;
+            }
+
             this.flights.remove(flight);
             return true;
+        } catch (Exception e) {
+            throw new CollectionDaoException(CollectionDaoException.ERROR_DELETING_FLIGHT);
         }
-
-        return false;
     }
 
     @Override
     public boolean updateEntity(Flight y) {
-        if (flights.contains(y)) {
-            this.flights.set(flights.indexOf(y), y);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void loadDataBase() throws IOException, ClassNotFoundException {
-        if (!file.exists()) {
-            flights = new ArrayList<>();
-        }
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            List<Flight> loadedFlights = (List<Flight>) ois.readObject();
-            this.flights.clear();
-            this.flights.addAll(loadedFlights);
+        try {
+            if (flights.contains(y)) {
+                this.flights.set(flights.indexOf(y), y);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            throw new CollectionDaoException(CollectionDaoException.ERROR_UPDATING_FLIGHT);
         }
     }
 
     @Override
-    public void saveDataBase() throws IOException {
+    public void loadDataBase() {
+        try {
+            if (!file.exists()) {
+                flights = new ArrayList<>();
+            }
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+                List<Flight> loadedFlights = (List<Flight>) ois.readObject();
+                this.flights.clear();
+                this.flights.addAll(loadedFlights);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            throw new CollectionDaoException(CollectionDaoException.ERROR_LOADING_DATA, e);
+        }
+    }
+
+    @Override
+    public void saveDataBase() {
+
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(this.flights);
-
+        } catch (Exception e) {
+            throw new CollectionDaoException(CollectionDaoException.ERROR_SAVING_DATA, e);
         }
     }
 }

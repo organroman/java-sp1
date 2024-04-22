@@ -204,12 +204,11 @@ public class MainMenu {
         try {
             flightController.loadData();
             orderController.loadData();
-            System.out.println(showOurMenu());
-            do {
-                System.out.print("Enter the number of command from the list: ");
-                handleMenu(getAndValidateNumberForMenu());
+            while (exitForApp) {
                 System.out.println(showOurMenu());
-            } while (exitForApp);
+                System.out.print("Enter the number of command from the list: \n");
+                handleMenu(getAndValidateNumberForMenu());
+            }
         } catch (IOException e) {
             System.out.println("Something went wrong. Try it again.");
         } catch (ClassNotFoundException e) {

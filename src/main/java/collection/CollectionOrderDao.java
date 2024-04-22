@@ -54,9 +54,9 @@ public class CollectionOrderDao implements Dao<Order> {
     @Override
     public boolean deleteEntity(int orderId) {
         try {
-            Order toDelete = orders.get(orderId);
-            if (null == toDelete) return false;
-            orders.remove(toDelete);
+            Optional<Order> toDelete = orders.stream().filter(order -> order.getOrderId() == orderId).findFirst();
+            if (toDelete.isEmpty()) return false;
+            orders.remove(toDelete.get());
             System.out.println("Order with id= " + orderId + " was delete");
             return true;
         } catch (Exception e) {

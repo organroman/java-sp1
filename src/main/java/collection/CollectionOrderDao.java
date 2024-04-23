@@ -22,12 +22,12 @@ public class CollectionOrderDao implements Dao<Order> {
     @Override
 
     public void create(Order y) {
-
         try {
             orders.add(y);
         } catch (Exception e) {
             throw new CollectionOrderDaoException(CollectionOrderDaoException.ERROR_CREATING_NEW_ORDER);
         }
+
     }
 
     @Override

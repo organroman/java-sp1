@@ -111,7 +111,15 @@ public class MainMenu {
 
     private static void cancelReservation() {
         System.out.println("Enter the number of the order you want to cancel");
-        orderController.deleteById(validateNumber());
+        int orderId = validateNumber();
+        Order myOrder = orderController.getById(orderId);
+        if (myOrder != null) {
+            orderController.deleteById(orderId);
+            flightController.increaseAvailableSeats(myOrder.getFlight().getId() , myOrder.getAmount());
+        }
+        else {
+            System.out.println("Order with this ID not found");
+        }
     }
 
     private static void myflights() {

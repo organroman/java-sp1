@@ -27,7 +27,7 @@ public class OrderService {
 
     public void deleteById(int id) {
         try {
-            if (orderDao.deleteEntity(id)) System.out.println("Order Was deleted");
+            if (orderDao.deleteEntity(id))  System.out.println("Order with id= " + id + " was delete");
             else System.out.println("Order with this ID not found");
         } catch (Exception e) {
             throw new OrderServiceException(OrderServiceException.ERROR_DELETE_ORDER);

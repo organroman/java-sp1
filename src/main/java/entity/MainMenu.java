@@ -54,7 +54,10 @@ public class MainMenu {
         try {
             System.out.println("Enter the flight number you are interested in");
             Flight temp = flightController.getFlight(getAndValidateNumberForFlightInfo());
-            System.out.println(toFormattedString(temp));
+            if(temp != null){
+                System.out.println("| Flight ID | Departure  | Destination          | Available seats | Data  | Time  |");
+                System.out.println(toFormattedString(temp));
+            }
 
         }catch (IOException e) {
         }
@@ -73,6 +76,7 @@ public class MainMenu {
         try {
             if(!flightController.findFlights(destination, data, needTicket).isEmpty()) {
                 System.out.println("Found options for your request");
+                System.out.println("| Flight ID | Departure  | Destination          | Available seats | Data  | Time  |");
                 flightController.findFlights(destination, data, needTicket)
                         .forEach(x -> System.out.println(toFormattedString(x)));
             }else {
@@ -80,21 +84,27 @@ public class MainMenu {
             }
         }catch (FlightServiceException e){System.out.println("There are no flights behind such a request");}
 
-        System.out.println("\nEnter 0 to go to the main menu or flight number to book tickets");
-        int id = validateNumber();
-        if (id != 0) {
+        System.out.println("\n0. Exit to main menu");
+        System.out.println("1. Order ticket");
+        int menuChoice = validateNumber();
+        if (menuChoice != 0) {
+            System.out.println("Enter the flight id for which you want to book tickets: ");
+            int flightId = validateNumber();
             System.out.println("Keep the first and last names of all passengers who book tickets.");
             List<Person> personInOrder = new ArrayList<>();
             Person buyer = createPerson("buyer");
             for (int i = 0; i < needTicket - 1; i++) {
-                System.out.printf("Enter name %d passenger\n", ++i);
+                int passengerId = i+1;
+                System.out.printf("Enter name %d passenger\n", passengerId);
                 String nameOfPassenger = scanner.nextLine();
-                System.out.printf("Enter surname %d passenger\n", ++i);
+                System.out.printf("Enter surname %d passenger\n", passengerId);
                 String surnameOfPassenger = scanner.nextLine();
                 personInOrder.add(new Person(nameOfPassenger, surnameOfPassenger));
             }
-            orderController.create(flightController.getFlight(id), buyer, needTicket, personInOrder);
-            flightController.decreaseAvailableSeats(id, needTicket);
+            System.out.println("Order accepted");
+            System.out.println();
+            orderController.create(flightController.getFlight(flightId), buyer, needTicket, personInOrder);
+            flightController.decreaseAvailableSeats(flightId, needTicket);
         }
     }
 
@@ -188,7 +198,9 @@ public class MainMenu {
         return number;
     }
     public static void orderToPrint (Order order){
-        System.out.println(toFormattedString(order.getFlight()));
+        System.out.println("| Flight ID | Departure  | Destination     | Data  | Time  |");
+        System.out.println(toFormattedStringForOrder(order.getFlight()));
+        System.out.printf("Tickets purchased: %d",order.getAmount() );
         System.out.printf("\nOrder number: %d\n",order.getOrderId());
         System.out.printf("Passenger : %s \n",order.getPassengers().toString());
     }
@@ -198,6 +210,14 @@ public class MainMenu {
         String time = flightController.getTimeOfDeparture(flight.getId());
         return String.format("| %-9s | %-10s | %-20s | %-15d | %-5s | %-5s |",
                 flight.getId(), flight.getDeparture(), flight.getDestination(), flight.availableSeats,
+                data , time);
+    }
+    public static String toFormattedStringForOrder(Flight flight) {
+        StringBuilder data = new StringBuilder(flightController.getDateOfDeparture(flight.getId()));
+        data.delete(5,10);
+        String time = flightController.getTimeOfDeparture(flight.getId());
+        return String.format("| %-9s | %-10s | %-15s | %-5s | %-5s |",
+                flight.getId(), flight.getDeparture(), flight.getDestination(),
                 data , time);
     }
     public static void runApp() {

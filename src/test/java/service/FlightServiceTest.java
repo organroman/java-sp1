@@ -18,7 +18,7 @@ public class FlightServiceTest {
     public void getAllFlights() throws IOException, ClassNotFoundException {
         flightDao.loadDataBase();
         List<Flight> flights = flightService.getAllFlights();
-        assertEquals(154, flights.size());
+        assertEquals(155, flights.size());
 
     }
 
@@ -28,8 +28,7 @@ public class FlightServiceTest {
         flightService.createNewFlight("Monaco", 20, "25/04/2024, 15:20");
         List<Flight> flights = flightService.getAllFlights();
         flightService.getAllFlights();
-        assertEquals(155, flights.size());
-
+        assertEquals(156, flights.size());
     }
 
     @Test
@@ -103,7 +102,7 @@ public class FlightServiceTest {
     public void countFlights() throws IOException, ClassNotFoundException {
         flightDao.loadDataBase();
         int count = flightService.countFlights();
-        assertEquals(154, count);
+        assertEquals(155, count);
     }
 
     @Test

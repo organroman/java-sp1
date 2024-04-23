@@ -2,6 +2,7 @@ package collection;
 
 import dao.Dao;
 import entity.Order;
+import exception.CollectionDaoException;
 import exception.CollectionOrderDaoException;
 
 import java.io.*;
@@ -25,7 +26,7 @@ public class CollectionOrderDao implements Dao<Order> {
         try {
             orders.add(y);
         } catch (Exception e) {
-            throw new CollectionOrderDaoException(CollectionOrderDaoException.ERROR_CREATING_NEW_ORDER);
+            throw new CollectionDaoException(CollectionDaoException.ERROR_CREATING_NEW_ORDER);
         }
 
     }
@@ -35,7 +36,7 @@ public class CollectionOrderDao implements Dao<Order> {
         try {
             return orders;
         } catch (Exception e) {
-            throw new CollectionOrderDaoException(CollectionOrderDaoException.ERROR_GET_ALL_ORDERS);
+            throw new CollectionDaoException(CollectionDaoException.ERROR_GET_ALL_ORDERS);
         }
     }
 
@@ -45,7 +46,7 @@ public class CollectionOrderDao implements Dao<Order> {
             Optional<Order> order = orders.stream().filter(item -> item.getOrderId() == id).findFirst();
             return order.orElse(null);
         } catch (Exception e) {
-            throw new CollectionOrderDaoException(CollectionOrderDaoException.ERROR_GETTING_ORDER);
+            throw new CollectionDaoException(CollectionDaoException.ERROR_GETTING_ORDER);
         }
 
     }
@@ -59,7 +60,7 @@ public class CollectionOrderDao implements Dao<Order> {
             orders.remove(toDelete.get());
             return true;
         } catch (Exception e) {
-            throw new CollectionOrderDaoException(CollectionOrderDaoException.ERROR_DELETE_ORDER);
+            throw new CollectionDaoException(CollectionDaoException.ERROR_DELETE_ORDER);
         }
 
     }
@@ -72,7 +73,7 @@ public class CollectionOrderDao implements Dao<Order> {
             this.orders.set(orders.indexOf(orderToUpdate), y);
             return true;
         } catch (Exception e) {
-            throw new CollectionOrderDaoException(CollectionOrderDaoException.ERROR_UPDATING_ORDER);
+            throw new CollectionDaoException(CollectionDaoException.ERROR_UPDATING_ORDER);
         }
     }
 
@@ -91,7 +92,7 @@ public class CollectionOrderDao implements Dao<Order> {
                     System.out.println("Add DataBase From file Successful");
             }
         } catch (IOException | ClassNotFoundException e) {
-            throw new CollectionOrderDaoException(CollectionOrderDaoException.ERROR_LOADING_DATA_ORDERS, e);
+            throw new CollectionDaoException(CollectionDaoException.ERROR_LOADING_DATA_ORDERS, e);
         }
 
     }
@@ -103,7 +104,7 @@ public class CollectionOrderDao implements Dao<Order> {
             oos.writeObject(orders);
             oos.close();
         } catch (IOException e) {
-            throw new CollectionOrderDaoException(CollectionOrderDaoException.ERROR_SAVING_DATA_ORDERS, e);
+            throw new CollectionDaoException(CollectionDaoException.ERROR_SAVING_DATA_ORDERS, e);
         }
     }
 }

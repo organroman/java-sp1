@@ -3,6 +3,7 @@ package entity;
 import controller.FlightController;
 import controller.OrderController;
 import exception.Exception;
+import exception.FlightServiceException;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -43,7 +44,7 @@ public class MainMenu {
     }
 
     public static void showFlights() throws IOException {
-        System.out.println("| Flight ID | Departure  | Destination          | Available seats | Time  |");
+        System.out.println("| Flight ID | Departure  | Destination          | Available seats | Data  | Time  |");
         flightController.getTodayFLights().forEach(x -> {
             System.out.println(toFormattedString(x));
         });
@@ -69,10 +70,17 @@ public class MainMenu {
         String data = scanner.nextLine();
         System.out.println("How many tickets do you need? ");
         int needTicket = validateNumber();
-        flightController.findFlights(destination, data, needTicket)
-                .forEach(x -> System.out.println(toFormattedString(x)));
+        try {
+            if(!flightController.findFlights(destination, data, needTicket).isEmpty()) {
+                System.out.println("Found options for your request");
+                flightController.findFlights(destination, data, needTicket)
+                        .forEach(x -> System.out.println(toFormattedString(x)));
+            }else {
+                System.out.println("There are no flights behind such a request");
+            }
+        }catch (FlightServiceException e){System.out.println("There are no flights behind such a request");}
 
-        System.out.println("Enter 0 to go to the main menu or flight number to book tickets");
+        System.out.println("\nEnter 0 to go to the main menu or flight number to book tickets");
         int id = validateNumber();
         if (id != 0) {
             System.out.println("Keep the first and last names of all passengers who book tickets.");
@@ -87,8 +95,6 @@ public class MainMenu {
             }
             orderController.create(flightController.getFlight(id), buyer, needTicket, personInOrder);
             flightController.decreaseAvailableSeats(id, needTicket);
-            System.out.println("\n");
-            System.out.println(showOurMenu());
         }
     }
 
@@ -187,19 +193,22 @@ public class MainMenu {
         System.out.printf("Passenger : %s \n",order.getPassengers().toString());
     }
     public static String toFormattedString(Flight flight) {
-        return String.format("| %-9s | %-10s | %-20s | %-15d | %-5s |",
-                flight.getId(), flight.getDeparture(), flight.getDestination(), flight.availableSeats, flightController.getTimeOfDeparture(flight.getId()));
+        StringBuilder data = new StringBuilder(flightController.getDateOfDeparture(flight.getId()));
+        data.delete(5,10);
+        String time = flightController.getTimeOfDeparture(flight.getId());
+        return String.format("| %-9s | %-10s | %-20s | %-15d | %-5s | %-5s |",
+                flight.getId(), flight.getDeparture(), flight.getDestination(), flight.availableSeats,
+                data , time);
     }
     public static void runApp() {
         try {
             flightController.loadData();
             orderController.loadData();
-            System.out.println(showOurMenu());
-            do {
-                System.out.print("Enter the number of command from the list: ");
-                handleMenu(getAndValidateNumberForMenu());
+            while (exitForApp) {
                 System.out.println(showOurMenu());
-            } while (exitForApp);
+                System.out.print("Enter the number of command from the list: \n");
+                handleMenu(getAndValidateNumberForMenu());
+            }
         } catch (IOException e) {
             System.out.println("Something went wrong. Try it again.");
         } catch (ClassNotFoundException e) {

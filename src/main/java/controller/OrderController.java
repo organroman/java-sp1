@@ -43,4 +43,11 @@ public class OrderController {
     public Order getById(int id) {
         return orderService.getById(id);
     }
+
+    public void updateOrder(Order order){
+        orderService.updateOrder(order);
+    }
+
+
+
 }

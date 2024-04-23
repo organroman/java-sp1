@@ -1,8 +1,7 @@
-package service;
+package controller;
 
 import collection.CollectionFlightDao;
 
-import controller.OrderController;
 import entity.Flight;
 import entity.Order;
 

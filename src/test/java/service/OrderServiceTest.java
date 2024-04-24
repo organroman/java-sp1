@@ -74,12 +74,14 @@ public class OrderServiceTest {
     @Test
     public void updateOrder() {
         ordersService.loadData();
-        Optional<Order> orderOptional = orderDao.getAll().stream().findFirst();
-        Order order = orderOptional.get();
-        int i = order.getOrderId();
-        Person person = new Person("1", "2");
-        order.setBuyer(person);
-        ordersService.updateOrder(order);
-        assertEquals(person, ordersService.getById(i).getBuyer());
+        flightDao.loadDataBase();
+        Person person = new Person("AAA", "BBB");
+        Person person1 = new Person("CCC", "DDD");
+        Order order = new Order(flightDao.getById(1), person, 1, new ArrayList<>());
+        ordersService.create(order);
+        Order order1 = new Order(flightDao.getById(2), person1, 10, new ArrayList<>());
+        order1.setOrderId(order.getOrderId());
+        ordersService.updateOrder(order1);
+        assertEquals(10, ordersService.getMyOrders(person1).get(0).getAmount());
     }
 }

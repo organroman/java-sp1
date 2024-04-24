@@ -3,7 +3,6 @@ package collection;
 import dao.Dao;
 import entity.Order;
 import exception.CollectionDaoException;
-import exception.CollectionOrderDaoException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -58,7 +57,6 @@ public class CollectionOrderDao implements Dao<Order> {
             Optional<Order> toDelete = orders.stream().filter(order -> order.getOrderId() == orderId).findFirst();
             if (toDelete.isEmpty()) return false;
             orders.remove(toDelete.get());
-            System.out.println("Order with id= " + orderId + " was delete");
             return true;
         } catch (Exception e) {
             throw new CollectionDaoException(CollectionDaoException.ERROR_DELETE_ORDER);
@@ -70,7 +68,8 @@ public class CollectionOrderDao implements Dao<Order> {
     public boolean updateEntity(Order y) {
         try {
             if (null == getById(y.getOrderId())) return false;
-            this.orders.set(orders.indexOf(y), y);
+            Order orderToUpdate = orders.stream().filter(order -> order.getOrderId() == y.getOrderId()).findFirst().get();
+            this.orders.set(orders.indexOf(orderToUpdate), y);
             return true;
         } catch (Exception e) {
             throw new CollectionDaoException(CollectionDaoException.ERROR_UPDATING_ORDER);
